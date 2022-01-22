@@ -1,0 +1,16 @@
+[global]
+interval = 300
+backup_dir = src/backup_data/
+
+[netatmo]
+client_id = 
+client_secret = 
+netatmo_username = 
+netatmo_password = 
+netatmo_station_id = 
+
+[elastic]
+elastic_url = 
+elastic_username = 
+elastic_password = 
+ca_certs_dir = ca_certs/elasticsearch-ca.pem

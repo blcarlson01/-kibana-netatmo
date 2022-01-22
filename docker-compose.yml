@@ -1,0 +1,26 @@
+version: '2'
+services:
+    elastic-netatmo:
+      image: blcarlson01/kibana-netatmo
+      container_name: kibana-netatmo
+
+      environment:
+        - NETATMO_CLIENT_ID=
+        - NETATMO_CLIENT_SECRET=
+        - NETATMO_USERNAME=
+        - NETATMO_PASSWORD=
+        - NETATMO_STATION_ID=
+        - ELASTIC_URL=
+        - ELASTIC_USERNAME=
+        - ELASTIC_PASSWORD=
+        - INTERVAL=300
+        - BACKUP_DIR=/app/backup_data/
+        - CA_CERTS=/app/ca_certs/elasticsearch-ca.pem
+      networks:
+        - elastic
+      volumes:
+        - path:/app/backup_data
+        - path:/app/ca_certs
+networks:
+  elastic:
+    driver: bridge
