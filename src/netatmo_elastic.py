@@ -42,8 +42,15 @@ def process_station(es, index_name, station, station_name, backup_dir):
     station['max_temp'] = station['max_temp'] * 1.8 + 32
 
     station['Humidity'] = station['Humidity'] / 100
+
     if 'Pressure' in station:
         station['Pressure'] = float(station['Pressure'])
+    if 'AbsolutePressure' in station:
+        station['AbsolutePressure'] = float(station['AbsolutePressure'])
+    if 'min_temp' in station:
+        station['min_temp'] = float(station['min_temp'])
+    if 'max_temp' in station:
+        station['max_temp'] = float(station['max_temp'])
 
     # Convert Timestamps
     station['When'] = pd.Timestamp.utcfromtimestamp(station['When'])
