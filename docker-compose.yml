@@ -3,7 +3,7 @@ services:
     elastic-netatmo:
       image: blcarlson01/kibana-netatmo
       container_name: kibana-netatmo
-
+      restart: on-failure
       environment:
         - NETATMO_CLIENT_ID=
         - NETATMO_CLIENT_SECRET=

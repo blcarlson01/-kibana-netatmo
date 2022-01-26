@@ -174,17 +174,21 @@ if __name__ == "__main__":
             scope="read_station"
         )
 
-        weather_data = pyatmo.WeatherStationData(authorization)
-        weather_data.update()
-        weather_current_data = weather_data.get_last_data(netatmo_station_id)
+        try:
+            weather_data = pyatmo.WeatherStationData(authorization)
+            weather_data.update()
+            weather_current_data = weather_data.get_last_data(netatmo_station_id)
 
-        # 0 - Primary Station
-        # 1 - Outside Module
-        stations = list(weather_current_data.keys())
-        primary_station = weather_current_data[stations[0]]
-        outside_station = weather_current_data[stations[1]]
-        
-        process_station(es,"netatmo_indoor", primary_station, 'Basement', backup_dir)
-        process_station(es,"netatmo_outdoor", outside_station, 'Backyard', backup_dir)
+            # 0 - Primary Station
+            # 1 - Outside Module
+            stations = list(weather_current_data.keys())
+            primary_station = weather_current_data[stations[0]]
+            outside_station = weather_current_data[stations[1]]
+            
+            process_station(es,"netatmo_indoor", primary_station, 'Basement', backup_dir)
+            process_station(es,"netatmo_outdoor", outside_station, 'Backyard', backup_dir)
+        except Exception as e:
+            print("exception {}".format(e))
+            # Print and wait the interval to try again
         
         sleep(interval)
