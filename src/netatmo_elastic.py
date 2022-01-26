@@ -38,8 +38,10 @@ def shutdown(_signal):
 def process_station(es, index_name, station, station_name, backup_dir):
     # Convert from C to F
     station['Temperature'] = station['Temperature'] * 1.8 + 32
-    station['min_temp'] = station['min_temp'] * 1.8 + 32
-    station['max_temp'] = station['max_temp'] * 1.8 + 32
+    if 'min_temp' in station:
+        station['min_temp'] = station['min_temp'] * 1.8 + 32
+    if 'max_temp' in station:
+        station['max_temp'] = station['max_temp'] * 1.8 + 32
 
     station['Humidity'] = station['Humidity'] / 100
 
