@@ -56,8 +56,10 @@ def process_station(es, index_name, station, station_name, backup_dir):
 
     # Convert Timestamps
     station['When'] = pd.Timestamp.utcfromtimestamp(station['When'])
-    station['date_min_temp'] = pd.Timestamp.utcfromtimestamp(station['date_min_temp'])
-    station['date_max_temp'] = pd.Timestamp.utcfromtimestamp(station['date_max_temp'])
+    if 'date_min_temp' in station:
+        station['date_min_temp'] = pd.Timestamp.utcfromtimestamp(station['date_min_temp'])
+    if 'date_max_temp' in station:
+        station['date_max_temp'] = pd.Timestamp.utcfromtimestamp(station['date_max_temp'])
 
     station_data = pd.json_normalize(station)
     station_data = station_data.rename(columns={
