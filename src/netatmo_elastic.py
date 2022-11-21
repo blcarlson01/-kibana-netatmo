@@ -35,6 +35,35 @@ def shutdown(_signal):
     global running
     running = False
 
+def process_rain(es, index_name, station, station_name, backup_dir):
+    # Convert Timestamps
+    station['When'] =  pd.Timestamp.fromtimestamp(station['When'], 'UTC')
+
+    station_data = pd.json_normalize(station)
+    station_data = station_data.rename(columns={
+                        'When' : '@timestamp',
+                        'Rain' : 'rain'                         
+                        })
+    station_data["station_name"] = station_name
+
+    # append data frame to CSV file
+    station_data.to_csv(backup_dir+station_name+'.csv', mode='a', index=False, header=False)
+
+    # Push Results to Elastic
+    df = ed.pandas_to_eland(
+        pd_df=station_data,
+        es_client=es,
+        es_dest_index=index_name,
+        es_if_exists="append",
+        es_type_overrides={
+            '@timestamp' : 'date'
+            },
+        use_pandas_index_for_es_ids=False,
+        es_refresh=True
+    )
+
+    return station_data
+
 def process_station(es, index_name, station, station_name, backup_dir):
     # Convert from C to F
     station['Temperature'] = station['Temperature'] * 1.8 + 32
@@ -183,14 +212,23 @@ if __name__ == "__main__":
 
             # 0 - Primary Station
             # 1 - Outside Module
+            # 2 - Rain Gauge
+            # 3 - Main Floor
+            # 4 - 2nd Floor
             stations = list(weather_current_data.keys())
             primary_station = weather_current_data[stations[0]]
             outside_station = weather_current_data[stations[1]]
-            
+            rain_gauge = weather_current_data[stations[2]]
+            main_floor = weather_current_data[stations[3]]
+            second_floor = weather_current_data[stations[4]]
+
             process_station(es,"netatmo_indoor", primary_station, 'Basement', backup_dir)
             process_station(es,"netatmo_outdoor", outside_station, 'Backyard', backup_dir)
+            process_station(es, "netatmo_main_floor", main_floor, 'Main Floor', backup_dir)
+            process_station(es, "netatmo_second_floor", second_floor, 'Second Floor', backup_dir)
+            process_rain(es, "netatmo_rain_gauge", rain_gauge, 'Rain Gauge', backup_dir)
         except Exception as e:
             print("exception {}".format(e))
             # Print and wait the interval to try again
-        
+
         sleep(interval)

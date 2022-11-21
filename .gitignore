@@ -6,6 +6,7 @@ NOTES.json
 docker-compose copy.yml
 
 .DS_STORE
+.dccache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
