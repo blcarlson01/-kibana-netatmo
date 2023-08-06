@@ -19,7 +19,7 @@ def parse_config(config_file=None):
     _config = configparser.ConfigParser(interpolation=None)
 
     if config_file is None:
-        config_file = Path("config.ini")        
+        config_file = Path("config.ini")
 
     if config_file.exists():
         _config.read(config_file)
@@ -129,8 +129,7 @@ if __name__ == "__main__":
     authorization = None
     client_id = None
     client_secret = None
-    netatmo_username = None
-    netatmo_password = None
+    netatmo_refresh_token = None
     elastic_url = None
     elastic_username = None
     elastic_password = None
@@ -148,10 +147,9 @@ if __name__ == "__main__":
     if "netatmo" in config:
         client_id = config["netatmo"]["client_id"]
         client_secret = config["netatmo"]["client_secret"]
-        netatmo_username = config["netatmo"]["netatmo_username"]
-        netatmo_password = config["netatmo"]["netatmo_password"]
+        netatmo_refresh_token = config["netatmo"]["refresh_token"]
         netatmo_station_id = config["netatmo"]["netatmo_station_id"]
-    
+
     if "elastic" in config:
         elastic_url = config["elastic"]["elastic_url"]
         elastic_username = config["elastic"]["elastic_username"]
@@ -162,13 +160,11 @@ if __name__ == "__main__":
         client_id = environ.get("NETATMO_CLIENT_ID")
     if environ.get("NETATMO_CLIENT_SECRET"):
         client_secret = environ.get("NETATMO_CLIENT_SECRET")
-    if environ.get("NETATMO_USERNAME"):
-        netatmo_username = environ.get("NETATMO_USERNAME")
-    if environ.get("NETATMO_PASSWORD"):
-        netatmo_password = environ.get("NETATMO_PASSWORD")
+    if environ.get("NETATMO_REFRESH_TOKEN"):
+        netatmo_refresh_token = environ.get("NETATMO_REFRESH_TOKEN")
     if environ.get("NETATMO_STATION_ID"):
         netatmo_station_id = environ.get("NETATMO_STATION_ID")
-        
+
     if environ.get("ELASTIC_URL"):
         elastic_url = environ.get("ELASTIC_URL")
     if environ.get("ELASTIC_USERNAME"):
@@ -176,7 +172,7 @@ if __name__ == "__main__":
     if environ.get("NETATMO_STATION_ID"):
         elastic_password = environ.get("ELASTIC_PASSWORD")
     if environ.get("CA_CERTS"):
-        ca_certs_dir = environ.get("CA_CERTS")    
+        ca_certs_dir = environ.get("CA_CERTS")
 
     if interval is None:
         interval = 300  # interval in seconds; default are 5 Minutes
@@ -197,13 +193,12 @@ if __name__ == "__main__":
     )
 
     while running:
-        authorization = pyatmo.ClientAuth(
+        authorization = pyatmo.NetatmoOAuth2(
             client_id=client_id,
-            client_secret=client_secret,
-            username=netatmo_username,
-            password=netatmo_password,
-            scope="read_station"
+            client_secret=client_secret
         )
+        authorization.extra["refresh_token"] = netatmo_refresh_token
+        authorization.refresh_tokens()
 
         try:
             weather_data = pyatmo.WeatherStationData(authorization)

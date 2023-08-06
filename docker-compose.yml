@@ -7,8 +7,7 @@ services:
       environment:
         - NETATMO_CLIENT_ID=
         - NETATMO_CLIENT_SECRET=
-        - NETATMO_USERNAME=
-        - NETATMO_PASSWORD=
+        - NETATMO_REFRESH_TOKEN=
         - NETATMO_STATION_ID=
         - ELASTIC_URL=
         - ELASTIC_USERNAME=
