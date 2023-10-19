@@ -1,4 +1,4 @@
 pyatmo
 eland
 elasticsearch
-pandas
+pandas==1.5.3

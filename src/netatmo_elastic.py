@@ -209,17 +209,19 @@ if __name__ == "__main__":
             # 1 - Outside Module
             # 2 - Rain Gauge
             # 3 - Main Floor
-            # 4 - 2nd Floor
+            # 5 - 2nd Floor
             stations = list(weather_current_data.keys())
             primary_station = weather_current_data[stations[0]]
             outside_station = weather_current_data[stations[1]]
             rain_gauge = weather_current_data[stations[2]]
             main_floor = weather_current_data[stations[3]]
-            second_floor = weather_current_data[stations[4]]
+            garage = weather_current_data[stations[4]]
+            second_floor = weather_current_data[stations[5]]
 
             process_station(es,"netatmo_indoor", primary_station, 'Basement', backup_dir)
             process_station(es,"netatmo_outdoor", outside_station, 'Backyard', backup_dir)
             process_station(es, "netatmo_main_floor", main_floor, 'Main Floor', backup_dir)
+            process_station(es, "netatmo_garage", second_floor, 'Garage', backup_dir)
             process_station(es, "netatmo_second_floor", second_floor, 'Second Floor', backup_dir)
             process_rain(es, "netatmo_rain_gauge", rain_gauge, 'Rain Gauge', backup_dir)
         except Exception as e:
