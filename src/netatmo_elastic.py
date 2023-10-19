@@ -221,7 +221,7 @@ if __name__ == "__main__":
             process_station(es,"netatmo_indoor", primary_station, 'Basement', backup_dir)
             process_station(es,"netatmo_outdoor", outside_station, 'Backyard', backup_dir)
             process_station(es, "netatmo_main_floor", main_floor, 'Main Floor', backup_dir)
-            process_station(es, "netatmo_garage", second_floor, 'Garage', backup_dir)
+            process_station(es, "netatmo_garage", garage, 'Garage', backup_dir)
             process_station(es, "netatmo_second_floor", second_floor, 'Second Floor', backup_dir)
             process_rain(es, "netatmo_rain_gauge", rain_gauge, 'Rain Gauge', backup_dir)
         except Exception as e:
